@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication3;
 using WebApplication3.Controllers;
+using WebApplication3.Models;
 
 public class HomeControllerTests
 {
@@ -29,4 +30,38 @@ public class HomeControllerTests
         Assert.Equal(39, (result?.ViewData["Policy"] as string).Length);
     }
     
+    [Fact]
+    public void TestPageCorrectViewResult()
+    {
+        int testPage = 1;
+        HomeController controller = new HomeController();
+        ViewResult result = controller.TestPage(testPage) as ViewResult;
+        Assert.NotNull(result);
+        Assert.Equal(testPage + 1, controller.ViewBag.PageIncrement);
+        Assert.IsType<TestPageViewModel>(result.Model);
+        var model = result.Model as TestPageViewModel;
+        Assert.Equal(testPage + 1, model.Page);
+    }
+    
+    [Fact]
+    public void TestPageCorrectModel()
+    {
+        int testPage = 3;
+        HomeController controller = new HomeController();
+        ViewResult result = controller.TestPage(testPage) as ViewResult;
+        Assert.NotNull(result);
+        Assert.IsType<TestPageViewModel>(result.Model);
+        var model = result.Model as TestPageViewModel;
+        Assert.Equal(testPage + 1, model.Page);
+    }
+
+    [Fact]
+    public void TestPagePageCorrectly()
+    {
+        int initialPage = 5;
+        HomeController controller = new HomeController();
+        ViewResult result = controller.TestPage(initialPage) as ViewResult;
+        Assert.NotNull(result);
+        Assert.Equal(initialPage + 1, controller.ViewBag.PageIncrement);
+    }
 }
